@@ -1,24 +1,13 @@
-import torch
-import torch.nn as nn
-import torchfly.optim as optim
-
-# Create a linear regression model
-model = nn.Sequential(
-    nn.Linear(3, 1)
-)
-
-# Define the loss function
-loss_fn = nn.MSELoss()
-
-# Create an instance of FireFlyOptimizer
-opt = optim.FireFlyOptimizer(model, loss_fn)
-
-# Generate inputs and targets
-inputs = torch.randn(100, 3)
-targets = torch.mm(inputs, torch.Tensor([[1, 2, 3]]).t())
+from fireflyalgorithm import FireflyAlgorithm
+from fireflyalgorithm.problems import sphere
 
 
-for x, y in zip(inputs, targets):
-    opt.step(x, y)
+def func(x):
+    x, y = x 
+    # return (x**2 + y - 11)**2 + (x + y**2 - 7)**2
+    return x**2 + y**2 + x*y
 
-print(model[0].weight)
+FA = FireflyAlgorithm(gamma=0.01, alpha=0.2)
+best, best_pos = FA.run(function=func, dim=2, lb=-5, ub=5, max_evals=1000)
+
+print(best, best_pos)
