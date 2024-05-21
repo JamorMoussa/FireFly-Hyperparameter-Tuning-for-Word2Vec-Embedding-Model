@@ -26,20 +26,20 @@ def train_word_embedding_model(
         window_size: int, 
         epochs: int = 50,
         for_report: bool = False,
-        hidden: int = 10
+        hidden: int = 8
     ):
 
     context, target, _, vocab_size = get_context_target_vocab(sentences=sentences, w=window_size)
 
     dataset = TensorDataset(context, target)
 
-    data_loader = DataLoader(dataset, batch_size=1)
+    data_loader = DataLoader(dataset, batch_size=1, shuffle=True)
 
     model = nn.Sequential(
         nn.Embedding(vocab_size, emb_dim),
         SumReshapeTransform(),
         nn.Linear(emb_dim, hidden),
-        nn.LeakyReLU(True),
+        nn.ReLU(),
         nn.Linear(hidden, vocab_size),
     )
 
@@ -70,6 +70,8 @@ def train_word_embedding_model(
             opt.step()
 
             total_loss += loss.item()
+
+        total_loss /= len(dataset)
 
         
         if for_report: results["loss"].append(total_loss)
@@ -116,9 +118,12 @@ if __name__ == "__main__":
     print(model)
     print(total_loss)
 
+    _, _, vocab, _ = get_context_target_vocab(sentences= sentences, w=args.windowsize)
+
     report_path = gr.get_next_report_path()
 
     gr.plot_loss(report_path, results=results)
     gr.save_model_architecture(report_path, model=model, hyparms=vars(args))
+    gr.plot_word_embedding_in_2d_space(report_path, model=model, vocab=vocab)
     
     

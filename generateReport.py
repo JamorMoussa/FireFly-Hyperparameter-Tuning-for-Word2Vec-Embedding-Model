@@ -12,9 +12,6 @@ REPORT_DIR = osp.join(BASE_DIR, "report")
 
 if not osp.exists(REPORT_DIR): os.mkdir(REPORT_DIR)
 
-# if not osp.exists(osp.join(REPORT_DIR, "train_1")): os.mkdir(osp.join(REPORT_DIR, "train_1"))
-
-
 
 def plot_loss(dir: str, results: dict[list[float]]):
 
@@ -26,6 +23,7 @@ def plot_loss(dir: str, results: dict[list[float]]):
     plt.legend()
     
     plt.savefig(osp.join(dir, "loss_plot.png"))
+    plt.clf() 
 
 
 def save_model_architecture(dir: str, model: nn.Module, hyparms: dict):
@@ -36,6 +34,8 @@ def save_model_architecture(dir: str, model: nn.Module, hyparms: dict):
         f.write("\n\n")
         f.write(" ".join(["="*10, "hyperparameter tuning", "="*8, "\n"]))
         f.write(str(hyparms))
+
+    torch.save(model.state_dict(), osp.join(dir, "CBoWModel.pt"))
     
 
 def get_next_report_path() -> str:
@@ -44,16 +44,46 @@ def get_next_report_path() -> str:
 
     index = 0 
 
-    reports_list = sorted(reports, key= lambda path: -int(path.split("_")[1]))
+    try:
+        reports_list = sorted(reports, key= lambda path: -int(path.split("_")[1]))
 
-    index = int(reports_list[0].split("_")[1]) + 1
+        index = int(reports_list[0].split("_")[1]) + 1
 
-    next_report_path = osp.join(REPORT_DIR, f"train_{index}")
+    except IndexError: pass 
     
+    next_report_path = osp.join(REPORT_DIR, f"train_{index}")
+
     if not osp.exists(next_report_path): os.mkdir(next_report_path)
 
     return next_report_path
 
+
+def plot_word_embedding_in_2d_space(
+    dir: str,
+    model: nn.Module,
+    vocab:  dict[str, int]
+):
+
+    # words = ["king", "man", "woman", "queen"]
+
+    # words = tuple(set(" ".join(vocab.keys()).split(" ")))
+
+    words = ["king", "man","woman", "prince", "princess", "queen"]
+
+    stack = []
+
+    for word in words:
+        stack.append(model[0](torch.tensor(vocab[word])))
+
+    array = torch.stack(stack).detach().numpy()
+
+    plt.scatter(array[:, 0], array[:, 1])
+
+    for i, label in enumerate(words):
+        plt.annotate(label, (array[i, 0], array[i, 1]))
+
+    plt.savefig(osp.join(dir, "word_plot.png"))
+    plt.clf() 
 
 
 

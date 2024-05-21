@@ -59,7 +59,7 @@ if __name__ == "__main__":
     )
 
     bounder = FireFlyParameterBounder(bounds=[
-            (0.0001, 0.01), (0.89, 0.91), (0.98, 0.9999), (2, 10), (2,10)
+            (0.00001, 0.01), (0.899, 0.901), (0.9989, 0.999), (2, 10), (1,3)
         ])
 
     FA = FireFlyOptimizer(config= config, bounder= bounder)
