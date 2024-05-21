@@ -42,11 +42,10 @@ def train_word_embedding_model(
 
     opt = optim.Adam(model.parameters(), lr=lr, betas=betas)
 
-
     for _ in (bar := tqdm(range(epochs))):
         
         total_loss = 0
-        
+
         for context, target in data_loader:
 
             opt.zero_grad()
@@ -83,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument('--beta2', type=float, default=0.99,
                         help="")
     
-    parser.add_argument('--window_size', type=int, default=1,
+    parser.add_argument('--windowsize', type=int, default=1,
                         help="")
     
     parser.add_argument('--embdim', type=int, default=2,
@@ -98,7 +97,7 @@ if __name__ == "__main__":
     model, total_loss = train_word_embedding_model(
         lr= args.lr,
         betas= (args.beta1, args.beta2),
-        window_size= args.window_size,
+        window_size= args.windowsize,
         emb_dim= args.embdim,
         epochs= args.epochs
     )
