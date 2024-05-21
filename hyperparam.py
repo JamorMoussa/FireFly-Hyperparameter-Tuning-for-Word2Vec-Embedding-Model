@@ -14,12 +14,12 @@ def fitness(params: np.ndarray) -> float:
     window_size: int = int(params[3])
     emb_dim: int = int(params[4])
 
-    _, total_loss = train_word_embedding_model(
+    _, total_loss, _= train_word_embedding_model(
         lr = lr,
         betas= (beta1, beta2),
         window_size= window_size,
         emb_dim= emb_dim,
-        epochs= 10
+        epochs= 50
     )
 
     return total_loss
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     )
 
     bounder = FireFlyParameterBounder(bounds=[
-            (0.001, 0.01), (0.85, 0.999), (0.85, 0.999), (3, 20), (1, 20)
+            (0.0001, 0.01), (0.89, 0.91), (0.98, 0.9999), (2, 10), (2,10)
         ])
 
     FA = FireFlyOptimizer(config= config, bounder= bounder)

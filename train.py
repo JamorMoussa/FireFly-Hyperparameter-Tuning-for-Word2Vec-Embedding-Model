@@ -3,6 +3,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
 from data import sentences, get_context_target_vocab
+import generateReport as gr
 
 import argparse
 
@@ -23,7 +24,9 @@ def train_word_embedding_model(
         emb_dim: int, 
         betas: tuple[float, float],
         window_size: int, 
-        epochs: int = 10
+        epochs: int = 50,
+        for_report: bool = False,
+        hidden: int = 10
     ):
 
     context, target, _, vocab_size = get_context_target_vocab(sentences=sentences, w=window_size)
@@ -35,12 +38,16 @@ def train_word_embedding_model(
     model = nn.Sequential(
         nn.Embedding(vocab_size, emb_dim),
         SumReshapeTransform(),
-        nn.Linear(emb_dim, vocab_size),
+        nn.Linear(emb_dim, hidden),
+        nn.LeakyReLU(True),
+        nn.Linear(hidden, vocab_size),
     )
 
     criterion = nn.CrossEntropyLoss()
 
     opt = optim.Adam(model.parameters(), lr=lr, betas=betas)
+
+    results = {"loss": []}
 
     for _ in (bar := tqdm(range(epochs))):
         
@@ -63,10 +70,13 @@ def train_word_embedding_model(
             opt.step()
 
             total_loss += loss.item()
+
+        
+        if for_report: results["loss"].append(total_loss)
         
         bar.set_description(f"Loss: {total_loss :.5f}")
 
-    return model, total_loss
+    return model, total_loss, results
 
 
 if __name__ == "__main__":
@@ -90,19 +100,25 @@ if __name__ == "__main__":
     
     parser.add_argument('--epochs', type=int, default=1,
                         help="epochs for the training loop")
-    
+     
     args = parser.parse_args()
 
 
-    model, total_loss = train_word_embedding_model(
+    model, total_loss, results = train_word_embedding_model(
         lr= args.lr,
         betas= (args.beta1, args.beta2),
         window_size= args.windowsize,
         emb_dim= args.embdim,
-        epochs= args.epochs
+        epochs= args.epochs,
+        for_report= True
     )
 
     print(model)
     print(total_loss)
+
+    report_path = gr.get_next_report_path()
+
+    gr.plot_loss(report_path, results=results)
+    gr.save_model_architecture(report_path, model=model, hyparms=vars(args))
     
     
