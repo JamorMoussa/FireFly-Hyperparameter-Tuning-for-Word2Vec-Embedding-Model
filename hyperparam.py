@@ -2,6 +2,7 @@ from train import train_word_embedding_model
 import numpy as np
 
 from firefly import FireFlyOptimizer, FireFlyConfig, FireFlyParameterBounder
+import generateReport as gr
 
 import argparse
 
@@ -19,7 +20,7 @@ def fitness(params: np.ndarray) -> float:
         betas= (beta1, beta2),
         window_size= window_size,
         emb_dim= emb_dim,
-        epochs= 50
+        epochs= 10
     )
 
     return total_loss
@@ -64,16 +65,12 @@ if __name__ == "__main__":
 
     FA = FireFlyOptimizer(config= config, bounder= bounder)
     
-    res = []
+    results = FA.run(func= fitness, dim= 5)
 
-    for iter  in range(args.numtest):
-        FA.run(func= fitness, dim= 5)
-        res.append((FA.best_intensity , FA.best_pos))
-        print("# test {iter} is finished", "."*30)
+    best_pos = FA.best_pos
 
-    # mean = np.array(res).mean(axis=0)
+    print("best intensity:", FA.best_intensity)
 
-    best_pos = sorted(res, key= lambda val: val[0])[0][1]
+    gr.plot_loss(dir=gr.REPORT_DIR, results= results)
 
-    print(FA.best_intensity)
     print(f"--lr={best_pos[0]} --beta1={best_pos[1]} --beta2={best_pos[2]} --embdim={int(best_pos[3])} --windowsize={int(best_pos[4])}")

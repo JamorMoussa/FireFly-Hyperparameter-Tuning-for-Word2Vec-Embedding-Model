@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 import torch , torch.nn as nn
 
+from sklearn.decomposition import PCA
+
 BASE_DIR = "./"
 
 REPORT_DIR = osp.join(BASE_DIR, "report")
@@ -49,7 +51,9 @@ def get_next_report_path() -> str:
 
         index = int(reports_list[0].split("_")[1]) + 1
 
-    except IndexError: pass 
+    except IndexError: pass
+    except Exception as e:
+        print(e) 
     
     next_report_path = osp.join(REPORT_DIR, f"train_{index}")
 
@@ -64,9 +68,7 @@ def plot_word_embedding_in_2d_space(
     vocab:  dict[str, int]
 ):
 
-    # words = ["king", "man", "woman", "queen"]
-
-    # words = tuple(set(" ".join(vocab.keys()).split(" ")))
+    pca = PCA(n_components=2)
 
     words = ["king", "man","woman", "prince", "princess", "queen"]
 
@@ -75,7 +77,7 @@ def plot_word_embedding_in_2d_space(
     for word in words:
         stack.append(model[0](torch.tensor(vocab[word])))
 
-    array = torch.stack(stack).detach().numpy()
+    array = pca.fit_transform(torch.stack(stack).detach().numpy())
 
     plt.scatter(array[:, 0], array[:, 1])
 

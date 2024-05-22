@@ -20,6 +20,8 @@ class FireFlyOptimizer(FireFlyBase):
             dim: int
     ) -> None:
         
+        results = {"loss": []}
+        
         fireflies = self.gen_fireflies(dim=dim)
         intensity = self.get_intensity(func=func, fireflies=fireflies)
         
@@ -52,3 +54,5 @@ class FireFlyOptimizer(FireFlyBase):
                         if not np.isnan(intensity[i]) and intensity[i] < self.best_intensity: 
                             self.best_pos = self.bounder.apply(fireflies[i].copy())
                             self.best_intensity = func(self.best_pos)
+                            results["loss"].append(self.best_intensity)
+        return results

@@ -1,0 +1,12 @@
+========== model architecture ========== 
+
+Sequential(
+  (0): Embedding(25, 4)
+  (1): SumReshapeTransform()
+  (2): Linear(in_features=4, out_features=8, bias=True)
+  (3): ReLU()
+  (4): Linear(in_features=8, out_features=25, bias=True)
+)
+
+========== hyperparameter tuning ======== 
+{'lr': 0.01, 'beta1': 0.9003, 'beta2': 0.9989, 'windowsize': 3, 'embdim': 4, 'epochs': 10}
