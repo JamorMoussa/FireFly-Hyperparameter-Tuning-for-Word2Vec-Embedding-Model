@@ -52,3 +52,11 @@ To use FireFly as an optimizer for hyperparameter tuning, run the following comm
 ```bash
 ➜ python3 hyperparam.py --popsize=5 --alpha=1.0 --beta0=1.0 --gamma=0.01 --maxiters=5 
 ```
+
+## Train CBoW Model
+
+After obtaining the optimal hyperparameters with the previous scripts, let's train a CBoW Embeddings model with these parameters:
+
+```bash
+➜ python3 train.py --lr=0.0066 --beta1=0.899 --beta2=0.9989 --windowsize=1 --embdim=2 --epochs=50
+``` 
