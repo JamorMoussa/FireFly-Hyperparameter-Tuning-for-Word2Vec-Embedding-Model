@@ -8,7 +8,7 @@ iterative search and adjustment.
 **Hyperparameter tuning** is a critical step in the development of deep learning models. How can we use the meta-heuristic optimization methods to find the best and optimal hyperparameters. This project aims to use the **FireFly Algorithm** to hyperparameter tuning for a word2vec embedding model.
 
 
-### FireFly Algorithm
+## FireFly Algorithm
 
 In this project we provide an implimentaion of FireFly algorithm with some additionally features, shuch as: 
 
