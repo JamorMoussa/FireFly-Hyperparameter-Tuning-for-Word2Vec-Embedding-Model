@@ -1,8 +1,6 @@
 # FireFly Hyperparameter Tuning for Word2Vec Embedding Model
 
-**Swarm intelligence** algorithms, inspired by the collective behavior of social creatures like birds, bees, and fireflies, have shown great promise in solving complex optimization problems. The **Firefly Algorithm**, in particular, mimics the flashing behavior of fireflies to find optimal solutions through iterative search and adjustment.
-
-### Motivation
+## Motivation
 
 **Hyperparameter tuning** is a critical step in the development of deep learning models. This project aims to use the **FireFly Algorithm** to perform hyperparameter tuning for a Word2Vec embedding model. The goal is to leverage meta-heuristic optimization methods to find the best and most optimal hyperparameters.
 
