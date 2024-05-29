@@ -36,7 +36,7 @@ FA.run(func=fitness, dim=2)
 
 print("Best Fitness:", FA.best_intensity)
 print("Best position:", FA.best_pos)
-
+```
 
 ```bath
 ➜  FireFly-Optimizer-Deep-Learning git:(main) ✗ python3 firefly_example.py
