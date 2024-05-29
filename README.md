@@ -38,11 +38,19 @@ print("Best Fitness:", FA.best_intensity)
 print("Best position:", FA.best_pos)
 ```
 
-```bath
+```bash
 ➜  FireFly-Optimizer-Deep-Learning git:(main) ✗ python3 firefly_example.py
 
 FireFlyConfig(pop_size=100, alpha=1.0, beta0=1.0, gamma=0.01, max_iters=10, seed=None)
 FireFlyParameterBounder(bounds=[(-5, 5), (-5, 5)])
 Best Fitness: 0.009908765479110442
 Best position: [0.06986411 0.07090678]
+```
+
+## Hyperparameter Tuning With FireFly
+
+To use FireFly as an optimizer for hyperparameter tuning, run the following command and specify some arguments:
+
+```bash
+➜ python3 hyperparam.py --popsize=5 --alpha=1.0 --beta0=1.0 --gamma=0.01 --maxiters=5 
 ```
